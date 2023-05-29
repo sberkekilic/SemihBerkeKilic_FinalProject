@@ -1,18 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SemihBerkeKilic_FinalProject.Data;
 using SemihBerkeKilic_FinalProject.Models;
 
 namespace SemihBerkeKilic_FinalProject.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
+        private readonly AppDbContext _dbContext;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+        public AccountController(AppDbContext dbContext)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -22,14 +20,15 @@ namespace SemihBerkeKilic_FinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public IActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+                // Kullanıcı girişiyle ilgili işlemler burada gerçekleştirilir
+                // Örnek bir kullanıcı adı ve şifre kontrolü
+                if (model.Username == "admin" && model.Password == "password")
                 {
-                    await _signInManager.SignInAsync(user, false);
+                    // Başarılı giriş durumunda yönlendirme yapılabilir
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -37,7 +36,6 @@ namespace SemihBerkeKilic_FinalProject.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                 }
             }
-
             return View(model);
         }
 
@@ -48,34 +46,37 @@ namespace SemihBerkeKilic_FinalProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public IActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new User
+                try
                 {
-                    UserName = model.Username,
-                    Locked = false,
-                    Role = "User"
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Login", "Account");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
+                    var user = new User
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                        Name = model.Name,
+                        LastName = model.LastName,
+                        Mail = model.Mail,
+                        Password = model.Password,
+                        UserName = model.UserName
+                    };
+
+                    _dbContext.Users.Add(user);
+                    _dbContext.SaveChanges();
+                    ModelState.Clear();
+
+                    return RedirectToAction("Login");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while registering the user.");
+                    // Hata mesajını loglama veya hata izleme mekanizmalarına yönlendirme yapabilirsiniz.
+                    // Örneğin: _logger.LogError(ex, "An error occurred while registering the user.");
                 }
             }
 
             return View(model);
         }
+
     }
 }
