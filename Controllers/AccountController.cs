@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using NETCore.Encrypt.Extensions;
 using SemihBerkeKilic_FinalProject.Data;
 using SemihBerkeKilic_FinalProject.Models;
+using System.Security.Claims;
 
 namespace SemihBerkeKilic_FinalProject.Controllers
 {
@@ -26,8 +30,36 @@ namespace SemihBerkeKilic_FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
+				string md5Salt = _configuration.GetValue<string>("AppSettings:MD5Salt");
+				string saltedPassword = model.Password + md5Salt;
+				string hashedPassword = saltedPassword.MD5();
 
-            }
+                User user = _dbContext.Users.FirstOrDefault(x => x.Username.ToLower() == model.Username.ToLower() && x.Password == model.Password);
+                
+                if(user != null)
+                {
+                    if (user.Locked)
+                    {
+                        ModelState.AddModelError(nameof(model.Username), "User has been locked");
+                    }
+
+                }
+                else
+                {
+                    ModelState.AddModelError("","Username or Password is incorrect!");
+                }
+
+                List<Claim> claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+				claims.Add(new Claim(ClaimTypes.Name, user.FullName ?? string.Empty));
+				claims.Add(new Claim("Username", user.Username));
+
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                return RedirectToAction("Index", "Home");
+			}
             return View(model);
         }
         public IActionResult Register()
@@ -43,7 +75,7 @@ namespace SemihBerkeKilic_FinalProject.Controllers
                 if (_dbContext.Users.Any(x => x.Username.ToLower() == model.Username.ToLower()))
                 {
                     ModelState.AddModelError(nameof(model.Username), "Username is already exists.");
-                    View(model);
+                    return View(model); //return for prevent duplicate username
                 }
                 string md5Salt = _configuration.GetValue<string>("AppSettings:MD5Salt");
                 string saltedPassword = model.Password + md5Salt;
@@ -60,6 +92,17 @@ namespace SemihBerkeKilic_FinalProject.Controllers
             }
 
             return View(model);
+        }
+
+        public IActionResult Profile(string username)
+        {
+            User user = _dbContext.Users.FirstOrDefault(x => x.Username.ToLower() == username.ToLower());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
     }

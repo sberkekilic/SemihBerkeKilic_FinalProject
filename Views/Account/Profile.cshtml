@@ -1,0 +1,16 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2>Profile</h2>
+
+<div>
+    <h4>Username: @Model.Username</h4>
+    <p>Id: @Model.Id</p>
+    <p>Full Name: @Model.FullName</p>
+    <p>Locked: @Model.Locked</p>
+    <p>Role: @Model.Role</p>
+    <p>Created At: @Model.CreatedAt</p>
+</div>
