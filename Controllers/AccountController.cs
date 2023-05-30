@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NETCore.Encrypt.Extensions;
 using SemihBerkeKilic_FinalProject.Data;
 using SemihBerkeKilic_FinalProject.Models;
 
@@ -7,13 +8,14 @@ namespace SemihBerkeKilic_FinalProject.Controllers
     public class AccountController : Controller
     {
         private readonly AppDbContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(AppDbContext dbContext)
+        public AccountController(AppDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
 
-        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -24,22 +26,10 @@ namespace SemihBerkeKilic_FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kullanıcı girişiyle ilgili işlemler burada gerçekleştirilir
-                // Örnek bir kullanıcı adı ve şifre kontrolü
-                if (model.Username == "admin" && model.Password == "password")
-                {
-                    // Başarılı giriş durumunda yönlendirme yapılabilir
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
-                }
+
             }
             return View(model);
         }
-
-        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -50,29 +40,23 @@ namespace SemihBerkeKilic_FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                if (_dbContext.Users.Any(x => x.Username.ToLower() == model.Username.ToLower()))
                 {
-                    var user = new User
-                    {
-                        Name = model.Name,
-                        LastName = model.LastName,
-                        Mail = model.Mail,
-                        Password = model.Password,
-                        UserName = model.UserName
-                    };
-
-                    _dbContext.Users.Add(user);
-                    _dbContext.SaveChanges();
-                    ModelState.Clear();
-
-                    return RedirectToAction("Login");
+                    ModelState.AddModelError(nameof(model.Username), "Username is already exists.");
+                    View(model);
                 }
-                catch (Exception ex)
+                string md5Salt = _configuration.GetValue<string>("AppSettings:MD5Salt");
+                string saltedPassword = model.Password + md5Salt;
+                string hashedPassword = saltedPassword.MD5();
+
+                User user = new()
                 {
-                    ModelState.AddModelError(string.Empty, "An error occurred while registering the user.");
-                    // Hata mesajını loglama veya hata izleme mekanizmalarına yönlendirme yapabilirsiniz.
-                    // Örneğin: _logger.LogError(ex, "An error occurred while registering the user.");
-                }
+                    Username = model.Username,
+                    Password = model.Password,
+                };
+
+                _dbContext.Users.Add(user);
+                _dbContext.SaveChanges();
             }
 
             return View(model);

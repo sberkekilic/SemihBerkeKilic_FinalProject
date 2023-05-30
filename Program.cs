@@ -32,12 +32,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", async context =>
-{
-    context.Response.Redirect("/Home/Welcome");
-    await Task.CompletedTask;
-});
-
 
 app.MapControllerRoute(
     name: "default",

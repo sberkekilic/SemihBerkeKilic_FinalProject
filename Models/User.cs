@@ -1,12 +1,27 @@
-﻿namespace SemihBerkeKilic_FinalProject.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SemihBerkeKilic_FinalProject.Models
 {
+    [Table("Users")]
     public class User
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string LastName { get; set; }
-        public string Mail { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+
+        [StringLength(15)]
+        public string? FullName { get; set; }
+        [Required]
+        [StringLength(15)]
+        public string Username { get; set; }
+        [Required]
+        [StringLength(30)]
         public string Password { get; set; }
-        public string UserName { get; set; }
+        public bool Locked { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        public string Role { get; set; } = "user";
+
+
     }
 }
