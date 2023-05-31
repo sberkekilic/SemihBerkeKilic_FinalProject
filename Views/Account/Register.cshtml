@@ -20,6 +20,12 @@
 			</div>
 
 			<div class="form-group">
+				<label asp-for="Fullname">Fullname</label>
+				<input asp-for="Fullname" asp-for="Fullname" />
+				<span asp-validation-for="Fullname" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
 				<label asp-for="Password">Password</label>
 				<input asp-for="Password" asp-for="Password" type="password" />
 				<span asp-validation-for="Password" class="text-danger"></span>

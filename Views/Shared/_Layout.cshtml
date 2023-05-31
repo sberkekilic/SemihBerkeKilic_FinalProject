@@ -7,47 +7,112 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SemihBerkeKilic_FinalProject.styles.css" asp-append-version="true" />
+    <style>
+        /* Header Styling */
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-weight: bold;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+
+            .navbar-brand:hover {
+                color: #dc3545;
+            }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            transition: color 0.3s;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #dc3545;
+            }
+
+        /* Logout Button Styling */
+        .nav-link.logout-button {
+            color: #dc3545;
+            transition: color 0.3s;
+        }
+
+            .nav-link.logout-button:hover {
+                color: #fff !important;
+                background-color: #dc3545 !important;
+            }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #343a40;
+            padding: 10px 0;
+        }
+
+        .footer-text {
+            color: #fff;
+            font-size: 14px;
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #222;
+            color: #fff;
+        }
+
+        /* New Styles */
+        .navbar-nav.ml-auto {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 10px;
+        }
+    </style>
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Welcome">Ana Sayfa</a>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-expand-lg">
+                    <ul class="navbar-nav flex-grow-1 ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile" asp-route-username="@User.FindFirst("Username").Value">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Profile" asp-route-username="@User.FindFirst("Username").Value">
                                     @User.FindFirst("Username").Value
                                 </a>
-                            </li
+                            </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">
-                                    Logout
-                                </a>
+                                <form class="d-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="nav-link logout-button" style="background-color:#343a40;color:red; font-weight:600">Çıkış yap</button>
+                                </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">
-                                </a>
-                            </li
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Giriş yap</a>
+                            </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">
-
-                                </a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Kayıt ol</a>
                             </li>
                         }
                     </ul>
@@ -60,12 +125,16 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer">
         <div class="container">
-            &copy; 2023 - SemihBerkeKilic_FinalProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="footer-text text-white">&copy; 2023 - SemihBerkeKilic_FinalProject - <a class="footer-link" asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a></p>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

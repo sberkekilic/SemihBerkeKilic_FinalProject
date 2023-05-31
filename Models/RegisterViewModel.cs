@@ -4,11 +4,15 @@ namespace SemihBerkeKilic_FinalProject.Models
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage ="Username is required")]
+        [Required(ErrorMessage = "Username is required")]
         [StringLength(15)]
         public string Username { get; set; }
 
-        [Required]
+		[Required(ErrorMessage = "Full name is required")]
+		[StringLength(15)]
+		public string Fullname { get; set; }
+
+		[Required]
         [MinLength(6)]
         [MaxLength(30)]
         public string Password { get; set; }

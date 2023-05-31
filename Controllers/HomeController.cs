@@ -13,18 +13,35 @@ namespace SemihBerkeKilic_FinalProject.Controllers
             _logger = logger;
         }
 
-        public IActionResult Welcome()
-        {
-            return View();
-        }
+		public IActionResult Welcome()
+		{
+			// Kullanıcı giriş yapmış mı kontrol et
+			if (User.Identity.IsAuthenticated)
+			{
+				// Giriş yapmış kullanıcılar için hata sayfasına yönlendir
+				return RedirectToAction("Error", "Home");
+			}
+			else
+			{
+				// Giriş yapmamış kullanıcılar için Welcome sayfasını göster
+				return View();
+			}
+		}
 
+		public IActionResult Index()
+		{
+			// Kullanıcı giriş yapmış mı kontrol et
+			if (User.Identity.IsAuthenticated)
+			{
+				return View();
+			}
+			else
+			{
+				return RedirectToAction(nameof(Welcome));
+			}
+		}
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
+		public IActionResult Privacy()
         {
             return View();
         }
