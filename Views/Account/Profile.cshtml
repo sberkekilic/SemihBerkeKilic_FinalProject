@@ -1,16 +1,275 @@
 ﻿@model User
-
 @{
     ViewData["Title"] = "Profile";
 }
+<style>
+    body {
+        margin-top: 20px;
+        background-color: #f2f6fc;
+        color: #69707a;
+    }
 
-<h2>Profile</h2>
+    .img-account-profile {
+        height: 10rem;
+    }
 
-<div>
-    <h4>Username: @Model.Username</h4>
-    <p>Id: @Model.Id</p>
-    <p>Full Name: @Model.FullName</p>
-    <p>Locked: @Model.Locked</p>
-    <p>Role: @Model.Role</p>
-    <p>Created At: @Model.CreatedAt</p>
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+
+        .card .card-header {
+            font-weight: 500;
+        }
+
+    .card-header:first-child {
+        border-radius: 0.35rem 0.35rem 0 0;
+    }
+
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        background-color: rgba(33, 40, 50, 0.03);
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+
+    .nav-borders .nav-link.active {
+        color: #0061f2;
+        border-bottom-color: #0061f2;
+    }
+
+    .nav-borders .nav-link {
+        color: #69707a;
+        border-bottom-width: 0.125rem;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .form-control.username {
+        width: calc(100% - 220px); /* Adjust the value as needed */
+    }
+
+    .form-control.fullName {
+        width: calc(100% - 220px); /* Adjust the value as needed */
+    }
+</style>
+<div class="container-xl px-4 mt-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card-header">Profil Resmi</div>
+            <div class="card-body text-center">
+                <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+                <div class="text-center">
+                    <button id="uploadButton" class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header" style="color:black">Profil Detayları</div>
+                <div class="card-body" style="color:black">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="username">Username:</label>
+                                <div class="input-group">
+                                    <input class="form-control username" id="username" type="text" placeholder="İsminizi girin" value="@Model.Username" aria-describedby="button-username" disabled />
+                                    <div class="input-group-append" id="button-username">
+                                        <button id="button1" class="btn btn-outline-secondary edit-button1" data-input-id="username" type="button">Edit1</button>
+                                        <button id="button2" class="btn btn-outline-secondary" data-input-id="username" type="button" style="display: none;">Update1</button>
+                                        <button id="button3" class="btn btn-outline-secondary" data-input-id="username" type="button" style="display: none;">Cancel1</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="fullName">Full Name:</label>
+                                <div class="input-group">
+                                    <input class="form-control fullName" id="fullName" type="text" disabled="disabled" value="@Model.FullName" aria-describedby="button-fullName" disabled />
+                                    <div class="input-group-append" id="button-fullName">
+                                        <button id="button4" class="btn btn-outline-secondary edit-button2" data-input-id="fullName" type="button">Edit2</button>
+                                        <button id="button5" class="btn btn-outline-secondary" data-input-id="fullName" type="button" style="display: none;">Update2</button>
+                                        <button id="button6" class="btn btn-outline-secondary" data-input-id="fullName" type="button" style="display: none;">Cancel2</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="id">ID:</label>
+                                <input class="form-control" id="id" type="text" disabled="disabled" value="@Model.Id" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="locked">Locked:</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">
+                                        @if (Model.Locked)
+                                        {
+                                            <input class="form-check-input mt-0" type="checkbox" disabled checked />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input mt-0" type="checkbox" disabled />
+                                        }
+                                    </div>
+                                    <input type="text" value="@Model.Locked.ToString()" class="form-control" aria-label="Text input with radio button" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="role">Role:</label>
+                                <input class="form-control" id="role" type="text" disabled="disabled" value="@Model.Role" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="createdAt">CreatedAt:</label>
+                                <input class="form-control" id="createdAt" type="text" disabled="disabled" value="@Model.CreatedAt" />
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const button1 = document.getElementById('button1');
+    const button2 = document.getElementById('button2');
+    const button3 = document.getElementById('button3');
+    const button4 = document.getElementById('button4');
+    const button5 = document.getElementById('button5');
+    const button6 = document.getElementById('button6');
+
+    // Add an event listener to the upload button
+    const uploadButton = document.getElementById('uploadButton');
+    uploadButton.addEventListener('click', function () {
+        // Simulate the process of getting the new image URL
+        const newImageUrl = prompt('Enter the new image URL:');
+        if (newImageUrl) {
+            // Get the profile image element and update its source
+            const profileImage = document.querySelector('.img-account-profile');
+            if (profileImage) {
+                profileImage.setAttribute('src', newImageUrl);
+
+                // Store the new image URL in local storage
+                localStorage.setItem('profileImageUrl', newImageUrl);
+            } else {
+                console.error('Profile image element not found.');
+            }
+        }
+    });
+
+    // Check if a stored image URL exists in local storage
+    const storedImageUrl = localStorage.getItem('profileImageUrl');
+    if (storedImageUrl) {
+        // Get the profile image element and update its source with the stored URL
+        const profileImage = document.querySelector('.img-account-profile');
+        if (profileImage) {
+            profileImage.setAttribute('src', storedImageUrl);
+        } else {
+            console.error('Profile image element not found.');
+        }
+    }
+
+    button1.addEventListener('click', function () {
+        button1.style.display = 'none';
+        button2.style.display = 'inline-block';
+        button3.style.display = 'inline-block';
+        button2.style.marginLeft = '0';
+
+    });
+
+    button3.addEventListener('click', function () {
+        button1.style.display = 'inline-block';
+        button2.style.display = 'none';
+        button3.style.display = 'none';
+        button2.style.marginLeft = '0';
+
+    });
+
+    button4.addEventListener('click', function () {
+        button4.style.display = 'none';
+        button5.style.display = 'inline-block';
+        button6.style.display = 'inline-block';
+        button5.style.marginLeft = '0';
+
+    });
+
+    button6.addEventListener('click', function () {
+        button4.style.display = 'inline-block';
+        button5.style.display = 'none';
+        button6.style.display = 'none';
+        button5.style.marginLeft = '0'; 
+    });
+
+    $(document).ready(function () {
+        $(".edit-button1").click(function () {
+            enableEdit1($(this).data("input-id"));
+        });
+        $(".edit-button2").click(function () {
+            enableEdit2($(this).data("input-id"));
+        });
+        $("#button2").click(function () {
+            updateData();
+        });
+        $("#button3").click(function () {
+            cancelEdit();
+        });
+        $("#button5").click(function () {
+            updateData();
+        });
+        $("#button6").click(function () {
+            cancelEdit();
+        });
+        function enableEdit1(inputId) {
+            $("#" + inputId).prop("disabled", false);
+        }
+        function enableEdit2(inputId) {
+            $("#" + inputId).prop("disabled", false);
+        }
+        function updateData() {
+            var newUsername = $("#username").val();
+            var newFullName = $("#fullName").val();
+            $.ajax({
+                type: "GET",
+                url: "/Account/UpdateData",
+                data: { newUsername: newUsername, newFullName: newFullName },
+                success: function (response) {
+                    if (response.success) {
+                        $("#button2").hide();
+                        $("#button3").hide();
+                        $("#button5").hide();
+                        $("#button6").hide();
+                        $(".edit-button1").show();
+                        $(".edit-button2").show();
+                        $("#username").val(response.newUsername).prop("disabled", true);
+                        $("#fullName").val(response.newFullName).prop("disabled", true);
+                    }
+                },
+                error: function () {
+                    console.log("Error occurred while updating data.");
+                }
+            });
+        }
+        function cancelEdit() {
+            $("#button2").hide();
+            $("#button3").hide();
+            $("#button5").hide();
+            $("#button6").hide();
+            $(".edit-button1").show();
+            $(".edit-button2").show();
+            $("#username").prop("disabled", true);
+            $("#fullName").prop("disabled", true);
+        }
+    });
+</script>
+

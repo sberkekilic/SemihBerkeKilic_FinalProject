@@ -117,6 +117,43 @@ namespace SemihBerkeKilic_FinalProject.Controllers
             return View(user);
         }
 
+        public IActionResult UpdateUsername(string newUsername)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                User user = _dbContext.Users.FirstOrDefault(x => x.Id.ToString() == userId);
+                if (user != null)
+                {
+                    user.Username = newUsername;
+                    _dbContext.SaveChanges();
+
+                    return Json(new { success = true, newUsername = user.Username, newFullName = user.FullName });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
+        public IActionResult UpdateData(string newUsername, string newFullName)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                User user = _dbContext.Users.FirstOrDefault(x => x.Id.ToString() == userId);
+                if (user != null)
+                {
+                    user.Username = newUsername;
+                    user.FullName = newFullName;
+                    _dbContext.SaveChanges();
+
+                    return Json(new { success = true, newUsername = user.Username, newFullName = user.FullName });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
         public IActionResult Logout()
         {
             if (User.Identity.IsAuthenticated)
