@@ -14,10 +14,16 @@
         }
 
         .navbar-brand {
-            color: #fff;
+            color: #fff !important;
             font-weight: bold;
             font-size: 24px;
             transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            margin-left: 0px;
+            margin-right: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
         }
 
             .navbar-brand:hover {
@@ -27,23 +33,44 @@
         .navbar-nav .nav-link {
             color: #fff;
             transition: color 0.3s;
+            height: 44px;
+            line-hight: 44px;
         }
 
             .navbar-nav .nav-link:hover {
                 color: #dc3545;
             }
 
+        .navbar-nav.ml-auto {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 10px;
+            line-height: 30px;
+        }
         /* Logout Button Styling */
         .nav-link.logout-button {
-            color: #dc3545;
+            font-weight: 600;
             transition: color 0.3s;
+            border: 2px solid #dc3545; /* Add border instead of background color */
+            background-color: transparent; /* Remove background color */
+            border-radius: 5px;
+            padding: 8px 15px;
+            box-shadow: none; /* Remove box shadow */
+            height: 44px;
         }
 
             .nav-link.logout-button:hover {
                 color: #fff !important;
                 background-color: #dc3545 !important;
+                border-color: #dc3545; /* Adjust border color on hover */
+                box-shadow: none; /* Remove box shadow on hover */
             }
 
+        #logout-link {
+            color: white !important; /* Override the color style */
+        }
         /* Footer Styling */
         .footer {
             background-color: #343a40;
@@ -54,23 +81,12 @@
             color: #fff;
             font-size: 14px;
         }
-
         /* Body Styling */
         body {
             background-color: #222;
             color: #fff;
         }
-
-        /* New Styles */
-        .navbar-nav.ml-auto {
-            margin-left: auto;
-        }
-
-        .navbar-nav .nav-item:not(:last-child) {
-            margin-right: 10px;
-        }
     </style>
-
 </head>
 <body>
     <header>
@@ -90,11 +106,11 @@
                 </button>
                 <div class="navbar-expand-lg">
                     <ul class="navbar-nav flex-grow-1 ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
-                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+                            </li>
                             <li class="nav-item ms-auto">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Profile" asp-route-username="@User.FindFirst("Username").Value">
                                     @User.FindFirst("Username").Value
@@ -102,17 +118,8 @@
                             </li>
                             <li class="nav-item">
                                 <form class="d-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="nav-link logout-button" style="background-color:#343a40;color:red; font-weight:600">Çıkış yap</button>
+                                    <button type="submit" class="nav-link logout-button" id="logout-link">Çıkış yap</button>
                                 </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item ms-auto">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Giriş yap</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Kayıt ol</a>
                             </li>
                         }
                     </ul>
@@ -134,7 +141,6 @@
             </div>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

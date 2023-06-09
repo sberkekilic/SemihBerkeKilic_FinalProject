@@ -100,6 +100,7 @@ namespace SemihBerkeKilic_FinalProject.Controllers
 
                 _dbContext.Users.Add(user);
                 _dbContext.SaveChanges();
+                return RedirectToAction("Login", "Account");
             }
 
             return View(model);

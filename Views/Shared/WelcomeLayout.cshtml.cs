@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SemihBerkeKilic_FinalProject.Views.Home
+namespace SemihBerkeKilic_FinalProject.Views.Shared
 {
-    public class WelcomeModel : PageModel
+    public class WelcomeLayoutModel : PageModel
     {
         public void OnGet()
         {
